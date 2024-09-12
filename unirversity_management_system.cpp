@@ -1,226 +1,181 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <windows.h>
 using namespace std;
 
-class Bill
-{
+class University{
 private:
-    string Item;
-    int Rate, Quantity;
-
+	string RollNo, Name, Subject, Address;
 public:
-    Bill() : Item(""), Rate(0), Quantity(0) {}
+University():RollNo(""), Name(""), Subject(""), Address(""){}
 
-    void setItem(string item)
-    {
-        Item = item;
-    }
+setRollNo(string rollNo){
+RollNo = rollNo;
+}
 
-    void setRate(int rate)
-    {
-        Rate = rate;
-    }
+setName(string name){
+ Name = name;
+}
 
-    void setQuant(int quant)
-    {
-        Quantity = quant;
-    }
+setSubject(string subject){
+ Subject = subject;
+}
 
-    string getItem()
-    {
-        return Item;
-    }
+setAddress(string address){
+ Address = address;
+}
 
-    int getRate()
-    {
-        return Rate;
-    }
+string getRollNo(){
+return RollNo;
+}
 
-    int getQuant()
-    {
-        return Quantity;
-    }
+string getName(){
+ return Name;
+}
+
+string getSubject(){
+ return Subject;
+}
+
+string getAddress(){
+ return Address;
+}
 };
 
-void addItem(Bill b)
-{
-    bool close = false;
-    while (!close)
-    {
-        int choice;
-        cout << "\t1.Add." << endl;
-        cout << "\t2.close." << endl;
-        cout << "\tEnter Choice: ";
-        cin >> choice;
+add(University student){
+string rollNo, name, subject, address;
 
-        if (choice == 1)
-        {
-            system("cls");
-            string item;
-            int rate, quant;
+cout<<"\tEnter RollNo Of Student: ";
+cin>>rollNo;
+student.setRollNo(rollNo);
 
-            cout << "\tEnter Item Name: ";
-            cin >> item;
-            b.setItem(item);
+cout<<"\tEnter Name Of Student: ";
+cin>>name;
+student.setName(name);
 
-            cout << "\tEnter Rate Of Item: ";
-            cin >> rate;
-            b.setRate(rate);
+cout<<"\tEnter Subject Of Student: ";
+cin>>subject;
+student.setSubject(subject);
 
-            cout << "\tEnter Quantity Of Item: ";
-            cin >> quant;
-            b.setQuant(quant);
+cout<<"\tEnter Address Of Student: ";
+cin>>address;
+student.setAddress(address);
 
-            ofstream out("Bill.txt", ios::app);
-            if (!out)
-            {
-                cout << "\tError: File Can't Open!" << endl;
-            }
-            else
-            {
-                out << "\t" << b.getItem() << " : " << b.getRate() << " : " << b.getQuant() << endl
-                    << endl;
-            }
-            out.close();
-            cout << "\tItem Added Successfuly" << endl;
-            Sleep(3000);
-        }
-
-        else if (choice == 2)
-        {
-            system("cls");
-            close = true;
-            cout << "\tBack To Main Menu!" << endl;
-            Sleep(3000);
-        }
-    }
+ofstream out("D:/university.txt", ios::app);
+if(!out){
+cout<<"\tError: File Can't Open!"<<endl;
 }
 
-void printBill()
-{
-    system("cls");
-    int count = 0;
-    bool close = false;
-    while (!close)
-    {
-        system("cls");
-        int choice;
-        cout << "\t1.Add Bill." << endl;
-        cout << "\t2.Close Session." << endl;
-        cout << "\tEnter Choice: ";
-        cin >> choice;
-
-        if (choice == 1)
-        {
-            string item;
-            int quant;
-            cout << "\tEnter Item: ";
-            cin >> item;
-            cout << "\tEnter Quantity: ";
-            cin >> quant;
-
-            ifstream in("Bill.txt");
-            ofstream out("Bill Temp.txt");
-
-            string line;
-            bool found = false;
-
-            while (getline(in, line))
-            {
-                stringstream ss;
-                ss << line;
-                string itemName;
-                int itemRate, itemQuant;
-                char delimiter;
-                ss >> itemName >> delimiter >> itemRate >> delimiter >> itemQuant;
-
-                if (item == itemName)
-                {
-                    found = true;
-                    if (quant <= itemQuant)
-                    {
-                        int amount = itemRate * quant;
-                        cout << "\t Item | Rate | Quantity | Amount" << endl;
-                        cout << "\t" << itemName << "\t " << itemRate << "\t " << quant << "\t " << amount << endl;
-                        int newQuant = itemQuant - quant;
-                        itemQuant = newQuant;
-                        count += amount;
-
-                        out << "\t" << itemName << " : " << itemRate << " : " << itemQuant << endl;
-                    }
-                    else
-                    {
-                        cout << "\tSorry, " << item << " Ended!" << endl;
-                    }
-                }
-                else
-                {
-                    out << line << endl;
-                }
-            }
-            if (!found)
-            {
-                cout << "\tItem Not Available!" << endl;
-            }
-            out.close();
-            in.close();
-            remove("Bill.txt");
-            rename("Bill Temp.txt", "Bill.txt");
-        }
-        else if (choice == 2)
-        {
-            close = true;
-            cout << "\tCounting Total Bill" << endl;
-        }
-        Sleep(3000);
-    }
-    system("cls");
-    cout << endl
-         << endl;
-    cout << "\t Total Bill ----------------- : " << count << endl
-         << endl;
-    cout << "\tThanks For Shopping!" << endl;
-    Sleep(5000);
+else{
+out<<"\t"<<student.getRollNo()<<" : "<<student.getName()<<" : "<<student.getSubject()
+<<" : "<<student.getAddress()<<endl<<endl;
+}
+out.close();
+cout<<"\tStudent Added Successfuly!"<<endl;
 }
 
-int main()
-{
-    Bill b;
+search(){
+	string rollNo;
+cout<<"\tEnter RollNo Of Student: ";
+cin>>rollNo;
 
-    bool exit = false;
-    while (!exit)
-    {
-        system("cls");
-        int val;
+ifstream in("D:/university.txt");
+if(!in){
+cout<<"\tError: File Can't Open!"<<endl;
+}
+string line;
+bool found = false;
+while(getline(in, line)){
+int data = line.find(rollNo);
+if(data != string::npos){
 
-        cout << "\tWelcome To Super Market Billing System" << endl;
-        cout << "\t**************************************" << endl;
-        cout << "\t\t1.Add Item." << endl;
-        cout << "\t\t2.Print Bill." << endl;
-        cout << "\t\t3.Exit." << endl;
-        cout << "\t\tEnter Choice: ";
-        cin >> val;
+cout<<"\t"<<line<<endl;
+found = true;
+}
+if(!found){
+cout<<"\tStudent Not Found!"<<endl;
+}
+}
+in.close();
 
-        if (val == 1)
-        {
-            system("cls");
-            addItem(b);
-            Sleep(3000);
-        }
+}
 
-        else if (val == 2)
-        {
-            printBill();
-        }
+update(University student){
+string rollNo;
+cout<<"\tEnter RollNo Of Student: ";
+cin>>rollNo;
 
-        else if (val == 3)
-        {
-            system("cls");
-            exit = true;
-            cout << "\tGood Luck!" << endl;
-            Sleep(3000);
-        }
-    }
+ifstream infile("D:/university.txt");
+ofstream outfile("D:/university temp.txt");
+if(!infile || !outfile){
+	cout<<"\tError: File Can't Opne!"<<endl;
+}
+
+string line;
+bool found = false;
+while(getline(infile, line)){
+int pos = line.find(rollNo);
+if(pos != string::npos){
+string address;
+cout<<"\tEnter New Address: ";
+cin>>address;
+student.setAddress(address);
+
+int newPos = line.find_last_of(':');
+line.replace(newPos + 2, string::npos, student.getAddress());
+}
+outfile<<line<<endl;
+found = true;
+}
+if(!found){
+cout<<"\tStudent Not Found!"<<endl;
+}
+outfile.close();
+infile.close();
+remove("D:/university.txt");
+rename("D:/university temp.txt", "D:/university.txt");
+cout<<"\tData Updated!"<<endl;
+}
+
+int main(){
+University student;
+
+bool exit = false;
+while(!exit){
+	system("cls");
+int val;
+cout<<"\tWelcome To University Management System"<<endl;
+cout<<"\t***************************************"<<endl;
+cout<<"\t1.Add Student."<<endl;
+cout<<"\t2.Search Student."<<endl;
+cout<<"\t3.Update Data Of Student."<<endl;
+cout<<"\t4.Exit."<<endl;
+cout<<"\tEnter Your Choice: ";
+cin>>val;
+
+if(val==1){
+system("cls");
+add(student);
+Sleep(6000);
+}
+
+else if(val==2){
+system("cls");
+search();
+Sleep(6000);
+}
+
+else if(val==3){
+system("cls");
+update(student);
+Sleep(6000);
+}
+
+else if(val==4){
+system("cls");
+exit = true;
+cout<<"\tGood Luck!"<<endl;
+Sleep(3000);
+}	
+}
 }
